@@ -43,17 +43,20 @@ def registerUser(request):
         return Response({'details': 'No data received'}, status=status.HTTP_400_BAD_REQUEST)
     
     # Ensure required fields are present
-    required_fields = ['name', 'email', 'password']
+    required_fields = ['phone', 'email', 'password']
     for field in required_fields:
         if field not in data:
             return Response({'details': f"'{field}' is required."}, status=status.HTTP_400_BAD_REQUEST)
     
     try:
         user = User.objects.create(
-            first_name=data['name'],
             username=data['email'],
             email=data['email'],
             password=make_password(data['password']),
+        )
+        Client.objects.create(
+            user=user, 
+            phone=data['phone'] 
         )
         # Client.objects.create(user=user)
         serializer = UserSerializerWithToken(user, many=False)

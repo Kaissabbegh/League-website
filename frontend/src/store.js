@@ -8,6 +8,7 @@ import {
   skinListReducer,
   sumsListReducer,
   userLoginReducer,
+  userRegisterReducer,
 } from "./reducers/ChampionReducers";
 
 const reducer = combineReducers({
@@ -19,6 +20,7 @@ const reducer = combineReducers({
   secruneList: secruneListReducer,
   sumsList: sumsListReducer,
   userLogin: userLoginReducer,
+  userRegister:userRegisterReducer
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
