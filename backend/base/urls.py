@@ -11,4 +11,5 @@ urlpatterns = [
     path('runes/',views.getRunes,name='rune'),
     path('secrunes/',views.getSecRunes,name='secrune'),
     path('sums/',views.getSums,name='sums'),
+    path('order/',views.createOrder,name='order'),
 ]

@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from .models import Champion,Rank,Rune,Skin,Summoner,SecRune,Icon,Client
-from .serializers import ChampionSerializer,IconSerializer,SkinSerializer,UserSerializer,UserSerializerWithToken,SecRuneSerializer,RuneSerializer,SummonerSerializer,RankSerializer
+from .models import Champion,Rank,Rune,Skin,Summoner,SecRune,Icon,Client,Order
+from .serializers import ChampionSerializer,IconSerializer,OrderSerializer,SkinSerializer,UserSerializer,UserSerializerWithToken,SecRuneSerializer,RuneSerializer,SummonerSerializer,RankSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
@@ -130,3 +130,43 @@ def getIcons(request):
     icon = Icon.objects.all()
     serializer = IconSerializer(icon,many=True)
     return Response(serializer.data)
+
+
+
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getCOrder(request):  
+    user = request.user
+    order = Order.objects.filter(User=user).order_by('-created_at')
+    properties_serializer = OrderSerializer(order, many=True)  
+    return Response(properties_serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def createOrder(request):
+    data = request.data
+    user = request.user  
+    image=request.FILES.get('image')  
+    try:
+        order = Order.objects.create(
+            user=user,   
+            price = data['price'],    
+            size = data['size'],
+            icon =  Icon.objects.get(id=data['icon']), 
+            skin = Skin.objects.get(id=data['skin']), 
+            sum1 = Summoner.objects.get(id=data['sum1']), 
+            sum2 = Summoner.objects.get(id=data['sum2']), 
+            rank = Rank.objects.get(id=data['rank']), 
+            rune = Rune.objects.get(id=data['title']), 
+            sec_rune = SecRune.objects.get(id=data['title']),
+            payment_method= data['title'], 
+            payment = image, 
+        )
+        serializer = OrderSerializer(order, many=False)
+        return Response(serializer.data)
+    except Exception as e:
+        message = {'details': str(e)}
+        return Response(message, status=status.HTTP_400_BAD_REQUEST)

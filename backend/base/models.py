@@ -7,6 +7,10 @@ from django.contrib.auth.models import User
 class Client(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=15)
+    full_name=models.CharField(max_length=255)
+    city=models.CharField(max_length=255)
+    address=models.CharField(max_length=255)
+    zip=models.CharField(max_length=255)
     def __str__(self):
         return self.user.username
 
@@ -79,26 +83,24 @@ class Rank(models.Model):
         return self.name
 
 
-class Painting(models.Model):
-    SIZE_CHOICES = [
-        ("20x35", "20x35"),
-        ("34x58", "34x58"),
-        # Add more sizes here as needed
-    ]
-
+class Order(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     id = models.BigAutoField(primary_key=True)
     price = models.BigIntegerField()
     created_at = models.DateField(auto_now_add=True)
-    size = models.CharField(max_length=10, choices=SIZE_CHOICES)  # Restrict sizes
+    size = models.CharField(max_length=10)  # Restrict sizes
 
     # Foreign Key Relationships
     icon = models.ForeignKey(Icon, on_delete=models.CASCADE, related_name='paintings')
-    champion = models.ForeignKey(Champion, on_delete=models.CASCADE, related_name='paintings')
     skin = models.ForeignKey(Skin, on_delete=models.CASCADE, related_name='paintings')
-    summoner = models.ForeignKey(Summoner, on_delete=models.CASCADE, related_name='paintings')
+    sum1 = models.ForeignKey(Summoner, on_delete=models.CASCADE, related_name='paintings1')
+    sum2 = models.ForeignKey(Summoner, on_delete=models.CASCADE, related_name='paintings')
     rank = models.ForeignKey(Rank, on_delete=models.CASCADE, related_name='paintings')
     rune = models.ForeignKey(Rune, on_delete=models.CASCADE, related_name='paintings')
     sec_rune = models.ForeignKey(SecRune, on_delete=models.CASCADE, related_name='paintings')
+    payment_method= models.CharField(max_length=255)
+    payment = models.ImageField(upload_to='payment/')
+    
 
     def __str__(self):
         return f"Painting {self.id} - Size: {self.size}"

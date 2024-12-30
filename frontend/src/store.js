@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import {
+  cartReducer,
   championListReducer,
   iconListReducer,
   rankListReducer,
@@ -20,15 +21,20 @@ const reducer = combineReducers({
   secruneList: secruneListReducer,
   sumsList: sumsListReducer,
   userLogin: userLoginReducer,
-  userRegister:userRegisterReducer
+  userRegister:userRegisterReducer,
+  CartFromStorage:cartReducer
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
+const CartFromStorage = localStorage.getItem("paintingData")
+  ? JSON.parse(localStorage.getItem("paintingData"))
+  : null;
 
 const initialState = {
   userLogin: { userInfo: userInfoFromStorage },
+  CartFromStorage:{ cartInfo:CartFromStorage }
 };
 
 const store = configureStore({

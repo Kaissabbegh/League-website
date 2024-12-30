@@ -19,8 +19,10 @@ import {
 } from "../actions/championActions";
 import Slider from "react-slick";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
   const settings = {
     dots: true,
     infinite: false,
@@ -71,7 +73,7 @@ function Home() {
   const [selectedSkinName, setSelectedSkinName] = useState(
     "Spirit Blossom Kindred"
   );
-  console.log(selectedSkin);
+  const [selectedSize, setselectedSize] = useState("20x35 cm");
 
   const handleChampionClick = (champion) => {
     setSelectedChampion(champion); // Set the clicked champion
@@ -81,7 +83,7 @@ function Home() {
     setSelectedChampion(null); // Reset to show all champions
   };
 
-  const [selectedOption, setSelectedOption] = useState("rank"); // default "rank"
+  const [selectedOption, setSelectedOption] = useState("rank");
 
   const dispatch = useDispatch();
   const championList = useSelector((state) => state.championList);
@@ -97,6 +99,25 @@ function Home() {
   const iconList = useSelector((state) => state.iconList);
   const { erroricons, loadingicons, icons } = iconList;
 
+  const paintingData = {
+    skin: selectedSkin.id,
+    icon: selectedIcon.id,
+    rune: selectedRune.id,
+    secRune: selectedSecRune.id,
+    sum1: selectedSum1.id,
+    sum2: selectedSum2.id,
+    rank: selectedRank.id,
+    name: selectedName,
+    skinName: selectedSkinName,
+    size: selectedSize,
+  };
+  const handleBuyNowClick = () => {
+    // Save to local storage
+    localStorage.setItem("paintingData", JSON.stringify(paintingData));
+
+    // Redirect to checkout
+    navigate("/checkout");
+  };
   useEffect(() => {
     dispatch(listChampions());
     dispatch(listIcons());
@@ -164,9 +185,7 @@ function Home() {
         <div className="relative flex items-center justify-center h-[70vh] w-[35vh] xl:order-2 order-1 ">
           {/* Layered Images */}
           <img
-            src={
-              selectedRank ? `${selectedRank.image}` : ""
-            }
+            src={selectedRank ? `${selectedRank.image}` : ""}
             className="absolute z-10 h-[85%] "
             style={{
               transform: "translate(-50%, -50%)",
@@ -215,9 +234,7 @@ function Home() {
           />
 
           <img
-            src={
-              selectedIcon ? `${selectedIcon.image}` : ""
-            }
+            src={selectedIcon ? `${selectedIcon.image}` : ""}
             className="absolute rounded-full xl:size-[2.7vw] size-[13.4vw]"
             style={{
               bottom: "16.5%",
@@ -238,9 +255,7 @@ function Home() {
             alt=""
           />
           <img
-            src={
-              selectedRune ? `${selectedRune.image}` : ""
-            }
+            src={selectedRune ? `${selectedRune.image}` : ""}
             className="absolute xl:size-[2.4vw] size-[10vw]"
             style={{
               bottom: "16.5%",
@@ -282,9 +297,7 @@ function Home() {
             alt=""
           />
           <img
-            src={
-              selectedSum1 ? `${selectedSum1.image}` : ""
-            }
+            src={selectedSum1 ? `${selectedSum1.image}` : ""}
             className="absolute xl:size-[1.5vw] size-[6vw]"
             style={{
               bottom: "17.2%",
@@ -303,9 +316,7 @@ function Home() {
             alt=""
           />
           <img
-            src={
-              selectedSum2 ? `${selectedSum2.image}` : ""
-            }
+            src={selectedSum2 ? `${selectedSum2.image}` : ""}
             className="absolute xl:size-[1.5vw] size-[6vw]"
             style={{
               bottom: "17.2%",
@@ -579,8 +590,26 @@ dark:[&::-webkit-scrollbar-thumb]:bg-purple-700"
             </div>
           )}
           <div className="bg-[#EBD3F8]  h-[75px] rounded-2xl flex items-center xl:justify-between justify-center px-10">
-            <div className="hidden xl:block"></div>
-            <button className="bg-[#2E073F] text-white rounded-lg p-3">
+            <div className="">
+              <label htmlFor="size-select" className="mr-2">
+                Select Size:
+              </label>
+              <select
+                id="size-select"
+                name="size"
+                className="p-2 rounded-2xl"
+                value={selectedSize}
+                onChange={(event) => handleSizeChange(event)}
+              >
+                <option value="20x35">20x35 cm</option>
+                <option value="16x28">16x28 cm</option>
+              </select>
+            </div>
+
+            <button
+              className="bg-[#2E073F] text-white rounded-2xl p-3"
+              onClick={handleBuyNowClick}
+            >
               BUY NOW!
             </button>
           </div>
@@ -589,7 +618,12 @@ dark:[&::-webkit-scrollbar-thumb]:bg-purple-700"
           className="fixed right-[20px] xl:right-[150px] z-50"
           style={{ bottom: "70px", zIndex: 18 }}
         >
-          <a target="_blank" rel="noopener noreferrer" href="https://wa.me/21693964524?text=I%20am%20interested%20in%20buying%20a%20league%20frame"  className="">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://wa.me/21693964524?text=I%20am%20interested%20in%20buying%20a%20league%20frame"
+            className=""
+          >
             <FaWhatsapp className="text=white size-[70px] bg-[#2E073F] xl:bg-[#D6BEE4] text-white xl:text-black p-3 rounded-2xl" />
           </a>
         </div>

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Champion,Rank,Rune,Skin,Summoner,SecRune,Icon,Client
+from .models import Champion,Rank,Rune,Skin,Summoner,SecRune,Icon,Client,Order
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
@@ -76,3 +76,10 @@ class UserSerializerWithToken(UserSerializer):
     def get_token(self,obj):
         token=RefreshToken.for_user(obj)
         return str(token.access_token)
+    
+
+class OrderSerializer(serializers.ModelSerializer):
+    User = UserSerializer(read_only=True) 
+    class Meta:
+        model = Order
+        fields = '__all__'

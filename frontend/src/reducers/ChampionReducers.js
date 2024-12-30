@@ -1,4 +1,7 @@
 import {
+  CART_FAIL,
+  CART_REQUEST,
+  CART_SUCCESS,
   CHAMPION_LIST_FAIL,
   CHAMPION_LIST_REQUEST,
   CHAMPION_LIST_SUCCESS,
@@ -157,3 +160,18 @@ export const userRegisterReducer = (state = {}, action) => {
   }
 };
 
+//cart
+
+export const cartReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CART_REQUEST:
+      return { loading: true };
+    case CART_SUCCESS:
+      return { loading: false, cartItems: action.payload };
+    case CART_FAIL:
+      return { loading: false, error: action.payload };
+    
+    default:
+      return state;
+  }
+};
