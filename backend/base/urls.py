@@ -2,8 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('',views.getRoutes,name='routes'),
-    path('login/',views.MyTokenObtainPairView.as_view(),name='token-obtain-pair'),
+    path('user/login/',views.MyTokenObtainPairView.as_view(),name='token-obtain-pair'),
     path('user/register/',views.registerUser,name='register'),
     path('champions/',views.getChamps,name='champions'),
     path('champions/<str:pk>',views.get_skins_for_champion,name='skin'),

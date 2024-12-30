@@ -25,8 +25,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-def getRoutes(request):
-    return JsonResponse ('hi',safe=False)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -35,19 +34,7 @@ def getUserProfile(request):
     serializer = UserSerializer(user,many=False)
     return Response(serializer.data)
 
-@api_view(['GET'])
-@permission_classes([IsAdminUser])
-def getUsers(request):
-    users= Client.objects.all()
-    serializer = UserSerializer(users,many=True)
-    return Response(serializer.data)
 
-@api_view(['GET'])
-@permission_classes([IsAdminUser])
-def getUserById(request, pk):
-    user = Client.objects.get(id=pk)
-    serializer = UserSerializer(user, many=False)
-    return Response(serializer.data)
 
 @api_view(['POST'])
 def registerUser(request):
@@ -73,10 +60,6 @@ def registerUser(request):
         return Response(serializer.data)
     except Exception as e:
         return Response({'details': 'user with this email already exists'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
 
 
 
