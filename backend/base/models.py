@@ -86,7 +86,7 @@ class Rank(models.Model):
 class Order(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     id = models.BigAutoField(primary_key=True)
-    price = models.BigIntegerField()
+    price = models.CharField(max_length=5) 
     created_at = models.DateField(auto_now_add=True)
     size = models.CharField(max_length=10)  # Restrict sizes
 

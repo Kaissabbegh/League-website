@@ -25,55 +25,69 @@ function Home() {
   const navigate = useNavigate();
   const settings = {
     dots: true,
-    infinite: false,
+    infinite: true,
     speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+  const Cartitems = useSelector((state) => state.CartFromStorage);
+  const { cartInfo } = Cartitems;
   const [selectedChampion, setSelectedChampion] = useState(null);
-  const [selectedSkin, setSelectedSkin] = useState({
-    id: 696,
-    name: "Kindred",
-    border: false,
-    image: "/images/skins/Kindred_3.jpg",
-    champion: 67,
-  });
-  const [selectedIcon, setSelectedIcon] = useState({
-    category: 0,
-    id: 63,
-    image: "/images/icons/profileicon6054.png",
-    name: "img",
-  });
-  const [selectedRune, setSelectedRune] = useState({
-    id: 8,
-    name: "Conqueror",
-    image: "/images/runes/Conqueror.png",
-  });
-  const [selectedSecRune, setSelectedSecRune] = useState({
-    id: 1,
-    name: "Domination",
-    image: "/images/sec_runes/7200_Domination.png",
-  });
-  const [selectedSum1, setSelectedSum1] = useState({
-    id: 1,
-    image: "/images/summoners/flash.png",
-    name: "flash",
-  });
-  const [selectedSum2, setSelectedSum2] = useState({
-    id: 4,
-    image: "/images/summoners/prime_smite.png",
-    name: "smite",
-  });
-  const [selectedRank, setSelectedRank] = useState({
-    id: 10,
-    name: "Challenger",
-    image: "/images/ranks/Challenger_HvlOg5i.png",
-  });
-  const [selectedName, setSelectedName] = useState("HighOnCokayn");
-  const [selectedSkinName, setSelectedSkinName] = useState(
-    "Spirit Blossom Kindred"
-  );
-  const [selectedSize, setselectedSize] = useState("20x35 cm");
+  const storedData = cartInfo || {
+    skin: {
+      id: 56,
+      name: "Akshan",
+      border: false,
+      image: "/images/skins/Akshan_1.jpg",
+      champion: 4,
+    },
+    icon: {
+      category: 0,
+      id: 63,
+      image: "/images/icons/profileicon6054.png",
+      name: "img",
+    },
+    rune: {
+      id: 8,
+      name: "Conqueror",
+      image: "/images/runes/Conqueror.png",
+    },
+    secRune: {
+      id: 1,
+      name: "Domination",
+      image: "/images/sec_runes/7200_Domination.png",
+    },
+    sum1: {
+      id: 1,
+      image: "/images/summoners/flash.png",
+      name: "flash",
+    },
+    sum2: {
+      id: 4,
+      image: "/images/summoners/prime_smite.png",
+      name: "smite",
+    },
+    rank: {
+      id: 10,
+      name: "Challenger",
+      image: "/images/ranks/Challenger_HvlOg5i.png",
+    },
+    name: "HighOnCokayn",
+    skinName: "Spirit Blossom Kindred",
+    size: "20x35 cm",
+  };
+
+  // Initialize state with the retrieved or default data
+  const [selectedSkin, setSelectedSkin] = useState(storedData.skin);
+  const [selectedIcon, setSelectedIcon] = useState(storedData.icon);
+  const [selectedRune, setSelectedRune] = useState(storedData.rune);
+  const [selectedSecRune, setSelectedSecRune] = useState(storedData.secRune);
+  const [selectedSum1, setSelectedSum1] = useState(storedData.sum1);
+  const [selectedSum2, setSelectedSum2] = useState(storedData.sum2);
+  const [selectedRank, setSelectedRank] = useState(storedData.rank);
+  const [selectedName, setSelectedName] = useState(storedData.name);
+  const [selectedSkinName, setSelectedSkinName] = useState(storedData.skinName);
+  const [selectedSize, setselectedSize] = useState(storedData.size);
 
   const handleChampionClick = (champion) => {
     setSelectedChampion(champion); // Set the clicked champion
@@ -100,13 +114,13 @@ function Home() {
   const { erroricons, loadingicons, icons } = iconList;
 
   const paintingData = {
-    skin: selectedSkin.id,
-    icon: selectedIcon.id,
-    rune: selectedRune.id,
-    secRune: selectedSecRune.id,
-    sum1: selectedSum1.id,
-    sum2: selectedSum2.id,
-    rank: selectedRank.id,
+    skin: selectedSkin,
+    icon: selectedIcon,
+    rune: selectedRune,
+    secRune: selectedSecRune,
+    sum1: selectedSum1,
+    sum2: selectedSum2,
+    rank: selectedRank,
     name: selectedName,
     skinName: selectedSkinName,
     size: selectedSize,
@@ -115,8 +129,8 @@ function Home() {
     // Save to local storage
     localStorage.setItem("paintingData", JSON.stringify(paintingData));
 
-    // Redirect to checkout
-    navigate("/checkout");
+    // Open checkout page in a new tab
+    window.open("/checkout", "_blank");
   };
   useEffect(() => {
     dispatch(listChampions());
@@ -599,7 +613,7 @@ dark:[&::-webkit-scrollbar-thumb]:bg-purple-700"
                 name="size"
                 className="p-2 rounded-2xl"
                 value={selectedSize}
-                onChange={(event) => handleSizeChange(event)}
+                onChange={(event) => setselectedSize(event.target.value)}
               >
                 <option value="20x35">20x35 cm</option>
                 <option value="16x28">16x28 cm</option>

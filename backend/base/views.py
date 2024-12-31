@@ -10,6 +10,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
+from rest_framework.exceptions import NotFound
+
 
 # Create your views here.
 
@@ -144,29 +146,91 @@ def getCOrder(request):
     properties_serializer = OrderSerializer(order, many=True)  
     return Response(properties_serializer.data)
 
+
+
+
 @api_view(['POST'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def createOrder(request):
     data = request.data
-    user = request.user  
-    image=request.FILES.get('image')  
     try:
+        # Reconstruct `cartInfo` data
+        cart_info = {
+            'skin': {
+                'id': data.get('cartInfo[skin][id]'),
+                'name': data.get('cartInfo[skin][name]'),
+                'border': data.get('cartInfo[skin][border]'),
+                'image': data.get('cartInfo[skin][image]'),
+                'champion': data.get('cartInfo[skin][champion]'),
+            },
+            'icon': {
+                'category': data.get('cartInfo[icon][category]'),
+                'id': data.get('cartInfo[icon][id]'),
+                'image': data.get('cartInfo[icon][image]'),
+                'name': data.get('cartInfo[icon][name]'),
+            },
+            'rune': {
+                'id': data.get('cartInfo[rune][id]'),
+                'name': data.get('cartInfo[rune][name]'),
+                'image': data.get('cartInfo[rune][image]'),
+            },
+            'secRune': {
+                'id': data.get('cartInfo[secRune][id]'),
+                'name': data.get('cartInfo[secRune][name]'),
+                'image': data.get('cartInfo[secRune][image]'),
+            },
+            'sum1': {
+                'id': data.get('cartInfo[sum1][id]'),
+                'name': data.get('cartInfo[sum1][name]'),
+                'image': data.get('cartInfo[sum1][image]'),
+            },
+            'sum2': {
+                'id': data.get('cartInfo[sum2][id]'),
+                'name': data.get('cartInfo[sum2][name]'),
+                'image': data.get('cartInfo[sum2][image]'),
+            },
+            'rank': {
+                'id': data.get('cartInfo[rank][id]'),
+                'name': data.get('cartInfo[rank][name]'),
+                'image': data.get('cartInfo[rank][image]'),
+            },
+            'size': data.get('cartInfo[size]'),
+            'name': data.get('cartInfo[name]'),
+            'skinName': data.get('cartInfo[skinName]'),
+        }
+        
+        # Validate and extract payment proof
+        payment_proof = request.FILES.get('paymentProof')
+        if not payment_proof:
+            return JsonResponse({"error": "Payment proof is required."}, status=400)
+        
+        # Create order and related objects
         order = Order.objects.create(
-            user=user,   
-            price = data['price'],    
-            size = data['size'],
-            icon =  Icon.objects.get(id=data['icon']), 
-            skin = Skin.objects.get(id=data['skin']), 
-            sum1 = Summoner.objects.get(id=data['sum1']), 
-            sum2 = Summoner.objects.get(id=data['sum2']), 
-            rank = Rank.objects.get(id=data['rank']), 
-            rune = Rune.objects.get(id=data['title']), 
-            sec_rune = SecRune.objects.get(id=data['title']),
-            payment_method= data['title'], 
-            payment = image, 
+            user=request.user,
+            price=data.get('price'),
+            size=cart_info['size'],
+            icon=Icon.objects.get(id=cart_info['icon']['id']),
+            skin=Skin.objects.get(id=cart_info['skin']['id']),
+            sum1=Summoner.objects.get(id=cart_info['sum1']['id']),
+            sum2=Summoner.objects.get(id=cart_info['sum2']['id']),
+            rank=Rank.objects.get(id=cart_info['rank']['id']),
+            rune=Rune.objects.get(id=cart_info['rune']['id']),
+            sec_rune=SecRune.objects.get(id=cart_info['secRune']['id']),
+            payment_method=data.get('paymentMethod'),
+            payment=payment_proof,
         )
-        serializer = OrderSerializer(order, many=False)
-        return Response(serializer.data)
+        return JsonResponse({"message": "Order created successfully!", "order_id": order.id}, status=201)
+    
+    except (Icon.DoesNotExist, Skin.DoesNotExist, Summoner.DoesNotExist,
+            Rank.DoesNotExist, Rune.DoesNotExist, SecRune.DoesNotExist) as e:
+        return JsonResponse({"error": f"Related object not found: {str(e)}"}, status=400)
+    
+    except KeyError as e:
+        return JsonResponse({"error": f"Missing or incorrect data: {str(e)}"}, status=400)
+    
     except Exception as e:
-        message = {'details': str(e)}
-        return Response(message, status=status.HTTP_400_BAD_REQUEST)
+        print(f"Unexpected error: {e}")
+        return JsonResponse({"error": "An unexpected error occurred."}, status=500)
+
+
+

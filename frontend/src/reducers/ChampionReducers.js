@@ -8,6 +8,9 @@ import {
   ICON_LIST_FAIL,
   ICON_LIST_REQUEST,
   ICON_LIST_SUCCESS,
+  ORDER_CREATE_FAIL,
+  ORDER_CREATE_REQUEST,
+  ORDER_CREATE_SUCCESS,
   RANK_LIST_FAIL,
   RANK_LIST_REQUEST,
   RANK_LIST_SUCCESS,
@@ -167,8 +170,23 @@ export const cartReducer = (state = {}, action) => {
     case CART_REQUEST:
       return { loading: true };
     case CART_SUCCESS:
-      return { loading: false, cartItems: action.payload };
+      return { loading: false, cartInfo: action.payload };
     case CART_FAIL:
+      return { loading: false, error: action.payload };
+    
+    default:
+      return state;
+  }
+};
+
+
+export const orderReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ORDER_CREATE_REQUEST:
+      return { loading: true };
+    case ORDER_CREATE_SUCCESS:
+      return { loading: false, orderInfo: action.payload };
+    case ORDER_CREATE_FAIL:
       return { loading: false, error: action.payload };
     
     default:

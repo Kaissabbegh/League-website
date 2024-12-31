@@ -3,6 +3,7 @@ import {
   cartReducer,
   championListReducer,
   iconListReducer,
+  orderReducer,
   rankListReducer,
   runeListReducer,
   secruneListReducer,
@@ -22,7 +23,8 @@ const reducer = combineReducers({
   sumsList: sumsListReducer,
   userLogin: userLoginReducer,
   userRegister:userRegisterReducer,
-  CartFromStorage:cartReducer
+  CartFromStorage:cartReducer,
+  order:orderReducer
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

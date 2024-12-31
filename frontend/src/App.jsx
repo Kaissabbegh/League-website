@@ -6,12 +6,11 @@ import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import Checkout from "./pages/Checkout";
 
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} ></Route>
+        <Route path="/" element={<Home />}></Route>
         <Route path="/login" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />
