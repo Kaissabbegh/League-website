@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import {
   cartReducer,
   championListReducer,
+  getCorderReducer,
   iconListReducer,
   orderReducer,
   rankListReducer,
@@ -24,7 +25,8 @@ const reducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister:userRegisterReducer,
   CartFromStorage:cartReducer,
-  order:orderReducer
+  order:orderReducer,
+  getCorder:getCorderReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

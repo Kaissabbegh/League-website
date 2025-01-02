@@ -140,9 +140,10 @@ def getIcons(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def getCOrder(request):  
+def getCOrder(request):
     user = request.user
-    order = Order.objects.filter(User=user).order_by('-created_at')
+    print(user)
+    order = Order.objects.filter(user=user).order_by('-created_at')
     properties_serializer = OrderSerializer(order, many=True)  
     return Response(properties_serializer.data)
 

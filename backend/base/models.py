@@ -84,9 +84,17 @@ class Rank(models.Model):
 
 
 class Order(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    STATUS_CHOICES = [
+        ('under_review', 'Under Review'),
+        ('in_process', 'In Process'),
+        ('shipping', 'Shipping'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     id = models.BigAutoField(primary_key=True)
-    price = models.CharField(max_length=5) 
+    price = models.CharField(max_length=10)
     created_at = models.DateField(auto_now_add=True)
     size = models.CharField(max_length=10)  # Restrict sizes
 
@@ -98,9 +106,15 @@ class Order(models.Model):
     rank = models.ForeignKey(Rank, on_delete=models.CASCADE, related_name='paintings')
     rune = models.ForeignKey(Rune, on_delete=models.CASCADE, related_name='paintings')
     sec_rune = models.ForeignKey(SecRune, on_delete=models.CASCADE, related_name='paintings')
-    payment_method= models.CharField(max_length=255)
+    payment_method = models.CharField(max_length=255)
     payment = models.ImageField(upload_to='payment/')
     
+    # Status field
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='under_review',  # Default status
+    )
 
     def __str__(self):
-        return f"Painting {self.id} - Size: {self.size}"
+        return f"Painting {self.id} - Size: {self.size} - Status: {self.get_status_display()}"

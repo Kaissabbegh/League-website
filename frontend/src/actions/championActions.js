@@ -8,6 +8,9 @@ import {
   ORDER_CREATE_FAIL,
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
+  ORDER_LIST_FAIL,
+  ORDER_LIST_REQUEST,
+  ORDER_LIST_SUCCESS,
   RANK_LIST_FAIL,
   RANK_LIST_REQUEST,
   RANK_LIST_SUCCESS,
@@ -257,7 +260,6 @@ export const CreateOrder = (formData) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    console.log(formData)
 
     const { data } = await axios.post("/api/order/", formData, config);
 
@@ -268,6 +270,40 @@ export const CreateOrder = (formData) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ORDER_CREATE_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+
+export const getCOrder = () => async (dispatch,getState) => {
+  try {
+    dispatch({
+      type: ORDER_LIST_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get("/api/getorders/", config);
+
+    dispatch({
+      type: ORDER_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ORDER_LIST_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

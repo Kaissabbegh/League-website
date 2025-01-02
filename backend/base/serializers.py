@@ -79,7 +79,7 @@ class UserSerializerWithToken(UserSerializer):
     
 
 class OrderSerializer(serializers.ModelSerializer):
-    User = UserSerializer(read_only=True) 
+    user = UserSerializer(read_only=True) 
     class Meta:
         model = Order
         fields = '__all__'
