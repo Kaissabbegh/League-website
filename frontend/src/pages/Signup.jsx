@@ -40,9 +40,9 @@ export default function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(fullNumber,email,password)
+    console.log(fullNumber, email, password);
     if (password != confirmPassword) {
-      setMessage("Passwords do not match");
+      alert("Passwords do not match");
     } else {
       dispatch(register(fullNumber, email, password));
     }
@@ -135,6 +135,7 @@ export default function Signup() {
                   placeholder="123456789"
                 />
               </div>
+              {error && <div className="flex text-red-600 items-center justify-center"><div className="pt-5">{error}</div></div>}
             </div>
             <button
               type="submit"
@@ -143,6 +144,7 @@ export default function Signup() {
               Sign Up
             </button>
           </form>
+          
           <div className="text-center my-4">
             <p className="text-black text-sm">
               Already have an account?

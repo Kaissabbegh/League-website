@@ -19,6 +19,7 @@ import {
 } from "../actions/championActions";
 import Slider from "react-slick";
 import Footer from "../components/Footer";
+import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
@@ -35,11 +36,11 @@ function Home() {
   const [selectedChampion, setSelectedChampion] = useState(null);
   const storedData = cartInfo || {
     skin: {
-      id: 56,
-      name: "Akshan",
+      id: 953,
+      name: "kindredloadscreen_23",
       border: false,
-      image: "/images/skins/Akshan_1.jpg",
-      champion: 4,
+      image: "/images/skins/kindredloadscreen_23.jpg",
+      champion: 67,
     },
     icon: {
       category: 0,
@@ -73,7 +74,7 @@ function Home() {
       image: "/images/ranks/Challenger_HvlOg5i.png",
     },
     name: "HighOnCokayn",
-    skinName: "Spirit Blossom Kindred",
+    skinName: "RDX Kindered",
     size: "20x35 cm",
   };
 
@@ -88,7 +89,7 @@ function Home() {
   const [selectedName, setSelectedName] = useState(storedData.name);
   const [selectedSkinName, setSelectedSkinName] = useState(storedData.skinName);
   const [selectedSize, setselectedSize] = useState(storedData.size);
-
+  console.log(selectedSkin);
   const handleChampionClick = (champion) => {
     setSelectedChampion(champion); // Set the clicked champion
   };
@@ -103,15 +104,15 @@ function Home() {
   const championList = useSelector((state) => state.championList);
   const { error, loading, champions } = championList;
   const rankList = useSelector((state) => state.rankList);
-  const { errorrank, loadingrank, ranks } = rankList;
+  const { error: errorrank, loading: loadingrank, ranks } = rankList;
   const sumsList = useSelector((state) => state.sumsList);
-  const { errorsums, loadingsums, sums } = sumsList;
+  const { error: errorsums, loading: loadingsums, sums } = sumsList;
   const runeList = useSelector((state) => state.runeList);
-  const { errorune, loadinrune, runes } = runeList;
+  const { error: errorune, loading: loadinrune, runes } = runeList;
   const secruneList = useSelector((state) => state.secruneList);
-  const { errosecrune, loadinsecrune, secrunes } = secruneList;
+  const { error: errosecrune, loading: loadinsecrune, secrunes } = secruneList;
   const iconList = useSelector((state) => state.iconList);
-  const { erroricons, loadingicons, icons } = iconList;
+  const { error: erroricons, loading: loadingicons, icons } = iconList;
 
   const paintingData = {
     skin: selectedSkin,
@@ -159,6 +160,22 @@ function Home() {
       label: "Other",
     },
   };
+  if (
+    loading ||
+    !icons ||
+    loadingicons ||
+    !secrunes ||
+    loadinsecrune ||
+    !runes ||
+    !sums ||
+    !ranks ||
+    !champions ||
+    loadinrune ||
+    loadingsums ||
+    loadingrank
+  ) {
+    return <Loader />;
+  }
 
   return (
     <>

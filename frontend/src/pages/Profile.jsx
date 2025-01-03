@@ -10,6 +10,7 @@ import { ImCheckboxChecked } from "react-icons/im";
 import { MdCancel } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { getCOrder } from "../actions/championActions";
+import Loader from "../components/Loader";
 
 export default function Profile() {
   const Cartitems = useSelector((state) => state.CartFromStorage);
@@ -20,7 +21,7 @@ export default function Profile() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const orderInfo = useSelector((state) => state.getCorder);
-  const { orders } = orderInfo;
+  const { loading:loadingorder,orders } = orderInfo;
 
   const redirect = location.search ? location.search.split("=")[1] : "/login";
   useEffect(() => {
@@ -72,10 +73,12 @@ export default function Profile() {
         return <span>Status Unknown</span>;
     }
   };
-
+  if (loading || loadingorder) {
+    return <Loader />;
+  }
   return (
     <>
-      <div className="bg-[url(assets/bg.jpg)] bg-cover bg-center min-h-screen pt-[50px] flex flex-col ">
+      <div className="bg-[url(assets/bg.jpg)] bg-cover bg-center min-h-screen pb-20 pt-[50px] flex flex-col ">
         <Header />
         {orders && orders.length ? (
           <div className="bg-[#EBD3F8] rounded-2xl p-6 sm:px-8 lg:px-[200px] mx-4 mt-16 xl:mx-[400px] flex flex-col items-center gap-y-5 shadow-lg hover:shadow-2xl transition-all duration-500">
@@ -106,7 +109,7 @@ export default function Profile() {
             </div>
           </div>
         ) : (
-          <div className="bg-[#EBD3F8] rounded-2xl p-6 sm:px-8 lg:px-[200px] mx-4 my-[50px] flex flex-col items-center gap-y-5">
+          <div className="bg-[#EBD3F8] rounded-2xl p-6 sm:px-8 lg:px-[200px] mx-4 mt-16 xl:mx-[400px] flex flex-col items-center gap-y-5 shadow-lg hover:shadow-2xl transition-all duration-500">
             <div className="flex justify-center items-center gap-2 mb-6">
               <FaClipboardList className="text-4xl md:text-[50px] text-[#2E073F]" />
               <div className="font-bold text-[28px] md:text-[50px] text-[#2E073F]">
@@ -119,8 +122,8 @@ export default function Profile() {
                 You don't have any orders yet
               </div>
             </div>
-            <div className="flex items-center justify-center text-center text-xs xl:text-sm mt-4">
-              Do you need any help? Please{" "}
+            <div className="flex items-center justify-center text-center text-xs gap-1 xl:text-sm mt-4">
+              Do you need any help? Please{""}
               <a
                 href="mailto:support@tokencraft.com"
                 className="text-[#2E073F] font-semibold"

@@ -23,9 +23,9 @@ export default function Signin() {
     dispatch(login(email, password));
   };
   return (
-    <div className="bg-[url(assets/bg.jpg)] bg-cover bg-center min-h-[100vh] pt-[50px] ">
+    <div className="bg-[url(assets/bg.jpg)] bg-cover bg-center  pt-[50px] ">
       <Header />
-      <div className="h-[70vh] flex items-center justify-center">
+      <div className="flex items-start xl:pt-32 pt-10 justify-center min-h-screen">
         <div className="bg-[#D6BEE3] xl:px-16 p-8 xl:w-[35%] rounded-2xl shadow-lg">
           <div className="text-black text-center mb-6 xl:text-2xl font-semibold">
             Login

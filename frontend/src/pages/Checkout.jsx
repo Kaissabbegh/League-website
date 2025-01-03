@@ -17,6 +17,7 @@ import { FaBox } from "react-icons/fa";
 import { FaMoneyBillWave } from "react-icons/fa6";
 import { CreateOrder } from "../actions/championActions";
 import { ORDER_CREATE_RESET } from "../constants/championConstants";
+import Loader from "../components/Loader";
 
 export default function Checkout() {
   const Cartitems = useSelector((state) => state.CartFromStorage);
@@ -28,7 +29,7 @@ export default function Checkout() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const oorder = useSelector((state) => state.order);
-  const { success, orderInfo } = oorder;
+  const { loading:loadingorder,success, orderInfo } = oorder;
   const [formData, setFormData] = useState({
     fullName: "",
     phoneNumber: "",
@@ -76,15 +77,18 @@ export default function Checkout() {
       [name]: files ? files[0] : value,
     }));
   };
-
+console.log(formData)
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("Form Data Submitted:", formData);
     dispatch(CreateOrder(formData));
   };
+  if(loading||loadingorder){
+    return <Loader/>
+  }
   return (
     <>
-      <div className="bg-[url(assets/bg.jpg)] bg-cover bg-center min-h-[100vh] pt-[50px] ">
+      <div className="bg-[url(assets/bg.jpg)] bg-cover bg-center min-h-[100vh] pt-[50px] pb-20">
         <Header />
         {!cartInfo ? (
           <div className="bg-[#EBD3F8] rounded-2xl p-[40px] xl:px-[200px] xl:mx-[400px] mx-[20px] my-[100px] flex flex-col items-top justify-center gap-y-5">
@@ -104,7 +108,7 @@ export default function Checkout() {
             </div>
           </div>
         ) : (
-          <div className="bg-[#EBD3F8] rounded-2xl p-[40px] xl:px-[200px] xl:mx-[400px] mx-[20px] mt-[100px] flex flex-col items-top justify-center gap-y-5">
+          <div className="bg-[#EBD3F8] rounded-2xl p-[40px]  xl:px-[200px] xl:mx-[400px] mx-[20px] mt-[100px] flex flex-col items-top justify-center gap-y-5">
             <div className="flex justify-center items-center gap-2">
               <IoBagCheckOutline className="text-[50px]" />
               <div className=" font-bold xl:text-[50px] text-[30px]">
@@ -118,8 +122,8 @@ export default function Checkout() {
               <GiPaintRoller className="xl:text-[30px]" />
               <div className="xl:text-[30px]">Preview</div>
             </div>
-            <div className="bg-[#EBD3F8] rounded-2xl p-5 shadow-purple-950 shadow-sm xl:flex items-start justify-center ">
-              <div className="relative flex items-center justify-center h-[70vh] xl:w-[35vh]">
+            <div className="bg-[#EBD3F8] rounded-2xl xl:p-5 p-1 shadow-purple-950 shadow-sm xl:flex items-start justify-center ">
+              <div className="relative flex items-center justify-center h-[70vh] w-[35vh] ">
                 {/* Layered Images */}
                 <img
                   src={cartInfo.rank ? `${cartInfo.rank.image}` : ""}
@@ -131,7 +135,7 @@ export default function Checkout() {
                   }}
                   alt="rank"
                 />
-                <div className="absolute h-[81%] w-[90%]">
+                <div className="absolute h-[81%]">
                   <img
                     src={
                       cartInfo.skin
@@ -150,7 +154,7 @@ export default function Checkout() {
                 <img
                   src="src/assets/lines.png"
                   alt=""
-                  className="absolute xl:w-[12vw] w-[52vw]"
+                  className="absolute xl:w-[250px] w-[200px] "
                   style={{
                     bottom: "20%",
                     left: "50%",
@@ -160,7 +164,7 @@ export default function Checkout() {
 
                 <img
                   src="src/assets/layer 1.png"
-                  className="absolute xl:size-[3vw] size-[15vw]"
+                  className="absolute xl:size-[60px] size-[55px]"
                   style={{
                     bottom: "16.1%",
                     left: "50%",
@@ -172,7 +176,7 @@ export default function Checkout() {
 
                 <img
                   src={cartInfo.icon ? `${cartInfo.icon.image}` : ""}
-                  className="absolute rounded-full xl:size-[2.7vw] size-[13.4vw]"
+                  className="absolute rounded-full xl:size-[55px] size-[50px]"
                   style={{
                     bottom: "16.5%",
                     left: "50%",
@@ -184,18 +188,18 @@ export default function Checkout() {
 
                 <img
                   src="src/assets/layer 1.png"
-                  className="absolute xl:size-[2.5vw] size-[10vw]"
+                  className="absolute xl:size-[45px] size-[40px]"
                   style={{
-                    bottom: "16.5%",
+                    bottom: "16%",
                     left: "10%",
                   }}
                   alt=""
                 />
                 <img
                   src={cartInfo.rune ? `${cartInfo.rune.image}` : ""}
-                  className="absolute xl:size-[2.4vw] size-[10vw]"
+                  className="absolute xl:size-[45px] size-[40px]"
                   style={{
-                    bottom: "16.5%",
+                    bottom: "16%",
                     left: "10%",
                   }}
                   alt="rune"
@@ -203,10 +207,10 @@ export default function Checkout() {
 
                 <img
                   src="src/assets/layer 1.png"
-                  className="absolute xl:size-[1.5vw] size-[6vw]"
+                  className="absolute xl:size-[30px] size-[25px]"
                   style={{
-                    bottom: "16.5%",
-                    left: "20.5%",
+                    bottom: "16%",
+                    left: "21%",
                   }}
                   alt=""
                 />
@@ -216,47 +220,47 @@ export default function Checkout() {
                       ? `${cartInfo.secRune.image}`
                       : "src/assets/Domination.webp"
                   }
-                  className="absolute xl:size-[1vw] size-[4vw]"
+                  className="absolute xl:size-[20px] size-[15px]"
                   style={{
-                    bottom: "17.3%",
-                    left: "22%",
+                    bottom: "17%",
+                    left: "23%",
                   }}
                   alt="secrune"
                 />
 
                 <img
                   src="src/assets/sums.png"
-                  className="absolute xl:size-[2vw] size-[8vw]"
+                  className="absolute xl:size-[35px] size-[30px]"
                   style={{
-                    bottom: "16.5%",
+                    bottom: "17%",
                     right: "22%",
                   }}
                   alt=""
                 />
                 <img
                   src={cartInfo.sum1 ? `${cartInfo.sum1.image}` : ""}
-                  className="absolute xl:size-[1.5vw] size-[6vw]"
+                  className="absolute xl:size-[27px] size-[23px]"
                   style={{
-                    bottom: "17.2%",
-                    right: "23.2%",
+                    bottom: "17.5%",
+                    right: "23.3%",
                   }}
                   alt=""
                 />
 
                 <img
                   src="src/assets/sums.png"
-                  className="absolute xl:size-[2vw] size-[8vw]"
+                  className="absolute xl:size-[35px] size-[30px]"
                   style={{
-                    bottom: "16.5%",
+                    bottom: "17%",
                     right: "10%",
                   }}
                   alt=""
                 />
                 <img
                   src={cartInfo.sum2 ? `${cartInfo.sum2.image}` : ""}
-                  className="absolute xl:size-[1.5vw] size-[6vw]"
+                  className="absolute xl:size-[27px] size-[23px]"
                   style={{
-                    bottom: "17.2%",
+                    bottom: "17.5%",
                     right: "11.3%",
                   }}
                   alt=""
@@ -265,7 +269,7 @@ export default function Checkout() {
                 <h1
                   className="absolute text-white xl:text-[0.8vw] text-nowrap text-center"
                   style={{
-                    bottom: "27%",
+                    bottom: "25%",
                     left: "50%",
                     transform: "translateX(-50%)",
                   }}
@@ -306,10 +310,16 @@ export default function Checkout() {
                 </div>
                 <div className="flex items-center gap-1 py-5 font-bold">
                   <FaMoneyBillWave />
-                  <div className="flex gap-1">
-                    Price:{" "}
-                    {cartInfo && cartInfo.size === "20x35 cm" ? "89DT" : "69DT"}{" "}
-                    <div className="font-normal">WITH FREE DELIVERY!</div>
+                  <div className="flex gap-1 items-center">
+                    <div className="text-nowrap">
+                      Price:{" "}
+                      {cartInfo && cartInfo.size === "20x35 cm"
+                        ? "89DT"
+                        : "69DT"}{" "}
+                    </div>
+                    <div className="font-normal text-wrap xl:text-sm text-xs">
+                      WITH FREE DELIVERY!
+                    </div>
                   </div>
                 </div>
               </div>
@@ -535,7 +545,24 @@ export default function Checkout() {
                 <div className="flex items-center justify-center">
                   <button
                     type="submit"
-                    className="bg-[#2E073F]  text-white rounded-2xl p-2 my-3 w-[50%]"
+                    disabled={
+                      !formData.fullName ||
+                      !formData.phoneNumber ||
+                      !formData.city ||
+                      !formData.shippingAddress ||
+                      !formData.zipCode ||
+                      !formData.paymentProof
+                    }
+                    className={`rounded-2xl p-2 my-3 w-[50%] ${
+                      !formData.fullName ||
+                      !formData.phoneNumber ||
+                      !formData.city ||
+                      !formData.shippingAddress ||
+                      !formData.zipCode ||
+                      !formData.paymentProof
+                        ? "bg-[#5c565f] cursor-not-allowed"
+                        : "bg-[#2E073F] text-white"
+                    }`}
                   >
                     BUY NOW!
                   </button>

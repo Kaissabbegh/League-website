@@ -154,6 +154,7 @@ def getCOrder(request):
 @permission_classes([IsAuthenticated])
 def createOrder(request):
     data = request.data
+    print(data)
     try:
         # Reconstruct `cartInfo` data
         cart_info = {

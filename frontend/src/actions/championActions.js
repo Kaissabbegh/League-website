@@ -233,12 +233,13 @@ export const register =
         type: USER_LOGIN_SUCCESS,
         payload: data,
       });
+      localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
       dispatch({
         type: USER_REGISTER_FAIL,
         payload:
-          error.response && error.response.data.detail
-            ? error.response.data.detail
+          error.response && error.response.data.details
+            ? error.response.data.details
             : error.message,
       });
     }
